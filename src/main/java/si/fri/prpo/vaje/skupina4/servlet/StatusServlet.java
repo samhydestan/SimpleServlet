@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 @WebServlet("/servlet")
 public class StatusServlet extends HttpServlet{
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         ConfigurationUtil conf=ConfigurationUtil.getInstance();
         PrintWriter pw=resp.getWriter();
         pw.printf("I've been all around the grlobe. Globe.\n-Sam Hyde\n\n\n");
