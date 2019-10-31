@@ -67,20 +67,91 @@ public class UporabnikDaoImpl implements BaseDao{
     return null;
   }
 
-  @Override
-  public void vstavi(Entiteta ent){
-    //TODO
-  }
+    @Override
+    public void vstavi(Entiteta ent){
+        Statement s=null;
+        try{
+            if(connection==null){
+                connection=getConnection();
+            }
+            String sql = "INSERT INTO uporabnik(";
+            String vals = "";
+            if(ent instanceof Uporabnik){
+                sql += "ImePriimek";
+                vals += "'" + ((Uporabnik) ent).getImePriimek() + "'";
+            }
+            sql += ") VALUES (";
+            sql += vals + ")";
+            s=connection.prepareStatement(sql);
+            int rs=s.executeUpdate(sql);
+            if(rs > 1 || rs == 0){
+                //error
+            }
 
-  @Override
-  public void odstrani(int id){
-    //TODO
-  }
+        } catch(SQLException e){
+            log.severe(e.toString());
+        } finally{
+            if(s!=null){
+                try{
+                    s.close();
+                } catch(SQLException e){
+                    log.severe(e.toString());
+                }
+            }
+        }
+    }
 
-  @Override
-  public void posodobi(Entiteta ent){
-    //TODO
-  }
+    @Override
+    public void odstrani(int id){
+        Statement s=null;
+        try{
+            if(connection==null){
+                connection=getConnection();
+            }
+            String sql = "DELETE FROM uporabniki WHERE id=" + id;
+            s=connection.prepareStatement(sql);
+            int rs=s.executeUpdate(sql);
+            if(rs > 1 || rs == 0){
+                //error
+            }
+        } catch(SQLException e){
+            log.severe(e.toString());
+        } finally{
+            if(s!=null){
+                try{
+                    s.close();
+                } catch(SQLException e){
+                    log.severe(e.toString());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void posodobi(Entiteta ent){
+        Statement s=null;
+        try{
+            if(connection==null){
+                connection=getConnection();
+            }
+            String sql = "UPDATE uporabniki SET  '" +((Uporabnik) ent).getImePriimek() +"' WHERE id=" + ent.getID();
+            s=connection.prepareStatement(sql);
+            int rs=s.executeUpdate(sql);
+            if(rs > 1 || rs == 0){
+                //error
+            }
+        } catch(SQLException e){
+            log.severe(e.toString());
+        } finally{
+            if(s!=null){
+                try{
+                    s.close();
+                } catch(SQLException e){
+                    log.severe(e.toString());
+                }
+            }
+        }
+    }
 
   @Override
   public List<Entiteta> vrniVse(){
