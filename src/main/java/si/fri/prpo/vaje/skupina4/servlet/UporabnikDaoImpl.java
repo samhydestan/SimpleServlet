@@ -17,7 +17,7 @@ public class UporabnikDaoImpl implements BaseDao{
   }
 
   private Connection connection;
-  private Logger log=Logger.getLogger("UporabnikDaoImpl");
+  private Logger log=Logger.getLogger(UporabnikDaoImpl.class.getName());
 
   @Override
   public Connection getConnection(){
@@ -32,8 +32,9 @@ public class UporabnikDaoImpl implements BaseDao{
   }
 
   private Uporabnik getUporabnikFromRS(ResultSet rs) throws SQLException{
+    int id=rs.getInt("ID");
     String imepriimek=rs.getString("imepriimek");
-    return new Uporabnik(imepriimek);
+    return new Uporabnik(id,imepriimek);
   }
 
   @Override
@@ -43,7 +44,7 @@ public class UporabnikDaoImpl implements BaseDao{
       if(connection==null){
         connection=getConnection();
       }
-      String sql = "SELECT * FROM uporabnik WHERE id=?";
+      String sql = "SELECT * FROM uporabniki WHERE id=?";
       ps=connection.prepareStatement(sql);
       ps.setInt(1,id);
       ResultSet rs=ps.executeQuery();
@@ -84,13 +85,13 @@ public class UporabnikDaoImpl implements BaseDao{
   @Override
   public List<Entiteta> vrniVse(){
     Statement s=null;
-    List<Entiteta> seznamUporabnikov=new ArrayList<Entiteta>();
+    List<Entiteta> seznamUporabnikov=new ArrayList<>();
     try{
       if(connection==null){
         connection=getConnection();
       }
-      String sql = "SELECT * FROM uporabnik";
-      s=connection.prepareStatement(sql);
+      s=connection.createStatement();
+      String sql = "SELECT * FROM uporabniki";
       ResultSet rs=s.executeQuery(sql);
       while(rs.next()){
         seznamUporabnikov.add(getUporabnikFromRS(rs));
