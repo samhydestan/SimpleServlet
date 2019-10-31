@@ -1,23 +1,32 @@
 package si.fri.prpo.vaje.skupina4.servlet;
 
 public class Uporabnik extends Entiteta{
-    private String ImePriimek;
+    private String imepriimek;
+    private String username;
 
-    public Uporabnik(int ID, String imePriimek){
-        super.setID(ID);
-        ImePriimek=imePriimek;
+    public Uporabnik(String imePriimek,String uname){
+        imepriimek=imePriimek;
+        username=uname;
     }
 
     public String getImePriimek(){
-        return this.ImePriimek;
+        return this.imepriimek;
     }
 
     public void setImePriimek(String imePriimek){
-        this.ImePriimek=imePriimek;
+        this.imepriimek=imePriimek;
+    }
+
+    public String getUsername(){
+        return username;
+    }
+
+    public void setUsername(String username){
+        this.username=username;
     }
 
     @Override
     public String toString(){
-        return new String("ID: "+String.valueOf(super.getID())+", Ime&priimek: "+this.getImePriimek());
+        return new String("Ime&priimek: "+this.getImePriimek()+", username: "+getUsername());
     }
 }

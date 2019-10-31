@@ -32,9 +32,9 @@ public class UporabnikDaoImpl implements BaseDao{
   }
 
   private Uporabnik getUporabnikFromRS(ResultSet rs) throws SQLException{
-    int id=rs.getInt("ID");
     String imepriimek=rs.getString("imepriimek");
-    return new Uporabnik(id,imepriimek);
+    String username=rs.getString("username");
+    return new Uporabnik(imepriimek,username);
   }
 
   @Override
@@ -69,31 +69,23 @@ public class UporabnikDaoImpl implements BaseDao{
 
     @Override
     public void vstavi(Entiteta ent){
-        Statement s=null;
+        PreparedStatement ps=null;
+        Uporabnik u=(Uporabnik)ent;
         try{
             if(connection==null){
                 connection=getConnection();
             }
-            String sql = "INSERT INTO uporabnik(";
-            String vals = "";
-            if(ent instanceof Uporabnik){
-                sql += "ImePriimek";
-                vals += "'" + ((Uporabnik) ent).getImePriimek() + "'";
-            }
-            sql += ") VALUES (";
-            sql += vals + ")";
-            s=connection.prepareStatement(sql);
-            int rs=s.executeUpdate(sql);
-            if(rs > 1 || rs == 0){
-                //error
-            }
-
+            String sql = "INSERT INTO uporabniki (imepriimek,username) VALUES (?,?)";
+            ps=connection.prepareStatement(sql);
+            ps.setString(1,u.getImePriimek());
+            ps.setString(2,u.getUsername());
+            ps.executeUpdate();
         } catch(SQLException e){
             log.severe(e.toString());
         } finally{
-            if(s!=null){
+            if(ps!=null){
                 try{
-                    s.close();
+                    ps.close();
                 } catch(SQLException e){
                     log.severe(e.toString());
                 }
@@ -103,23 +95,21 @@ public class UporabnikDaoImpl implements BaseDao{
 
     @Override
     public void odstrani(int id){
-        Statement s=null;
+        PreparedStatement ps=null;
         try{
             if(connection==null){
                 connection=getConnection();
             }
-            String sql = "DELETE FROM uporabniki WHERE id=" + id;
-            s=connection.prepareStatement(sql);
-            int rs=s.executeUpdate(sql);
-            if(rs > 1 || rs == 0){
-                //error
-            }
+            String sql = "DELETE FROM uporabniki WHERE id=?";
+            ps=connection.prepareStatement(sql);
+            ps.setInt(1,id);
+            ps.executeUpdate();
         } catch(SQLException e){
             log.severe(e.toString());
         } finally{
-            if(s!=null){
+            if(ps!=null){
                 try{
-                    s.close();
+                    ps.close();
                 } catch(SQLException e){
                     log.severe(e.toString());
                 }
@@ -129,23 +119,23 @@ public class UporabnikDaoImpl implements BaseDao{
 
     @Override
     public void posodobi(Entiteta ent){
-        Statement s=null;
+        PreparedStatement ps=null;
+        Uporabnik u=(Uporabnik)ent;
         try{
             if(connection==null){
                 connection=getConnection();
             }
-            String sql = "UPDATE uporabniki SET  '" +((Uporabnik) ent).getImePriimek() +"' WHERE id=" + ent.getID();
-            s=connection.prepareStatement(sql);
-            int rs=s.executeUpdate(sql);
-            if(rs > 1 || rs == 0){
-                //error
-            }
+            String sql = "UPDATE uporabniki SET username=?,imepriimek=? WHERE id=1";
+            ps=connection.prepareStatement(sql);
+            ps.setString(1,u.getUsername());
+            ps.setString(2,u.getImePriimek());
+            ps.executeUpdate();
         } catch(SQLException e){
             log.severe(e.toString());
         } finally{
-            if(s!=null){
+            if(ps!=null){
                 try{
-                    s.close();
+                    ps.close();
                 } catch(SQLException e){
                     log.severe(e.toString());
                 }
